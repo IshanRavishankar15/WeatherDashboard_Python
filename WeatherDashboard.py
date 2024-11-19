@@ -46,11 +46,11 @@ def plot_temperature_graph(times, temps, selected_day):
     ax.plot(times, temps, marker='o', linestyle='-', color='tab:cyan', label=f"Temperature on {selected_day}")
 
     # Add a title to the graph
-    ax.set_title(f"Date : {selected_day}", fontname = 'Helvetica', fontsize=19, color='white', ha='center',pad=20)
+    ax.set_title(f"Date : {selected_day}",  fontsize=19, color='white', ha='center',pad=20)
 
     # Set labels and customize colors
-    ax.set_xlabel("Time", fontname = 'Helvetica', fontsize=15, color='white', labelpad=20)
-    ax.set_ylabel("Temperature (°C)", fontname = 'Helvetica', fontsize=15, color='white', labelpad=20)
+    ax.set_xlabel("Time",  fontsize=15, color='white', labelpad=20)
+    ax.set_ylabel("Temperature (°C)",  fontsize=15, color='white', labelpad=20)
     ax.tick_params(axis='y', labelcolor='white', colors='white')
     ax.tick_params(axis='x', labelcolor='white')
 
