@@ -5,17 +5,14 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
 
-# API Configuration
-API_KEY = 'ec535cf3bfdd19f702ffed69ed6f7446'  # Your provided API key
+API_KEY = 'ec535cf3bfdd19f702ffed69ed6f7446' 
 BASE_URL = 'https://api.openweathermap.org/data/2.5'
 
-# Load City Data
 @st.cache_data
 def load_city_data(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
-# Fetch Current Weather
 def get_weather(city_name):
     params = {
         'q': city_name,
@@ -25,7 +22,6 @@ def get_weather(city_name):
     response = requests.get(f"{BASE_URL}/weather", params=params)
     return response.json()
 
-# Fetch 5-Day Forecast
 def get_forecast(city_name):
     params = {
         'q': city_name,
@@ -35,84 +31,63 @@ def get_forecast(city_name):
     response = requests.get(f"{BASE_URL}/forecast", params=params)
     return response.json()
 
-# Plot Temperature Graph with annotations and adjusted y-axis limits
 def plot_temperature_graph(times, temps, selected_day):
     fig, ax = plt.subplots(figsize=(10, 6), facecolor='#2e2e2e')  # Set dark background for the graph
 
-    # Convert times from string to datetime
     times = [datetime.strptime(time, '%Y-%m-%d %H:%M:%S') for time in times]
 
-    # Plot temperature data with markers
     ax.plot(times, temps, marker='o', linestyle='-', color='tab:cyan', label=f"Temperature on {selected_day}")
 
-    # Add a title to the graph
     ax.set_title(f"Date : {selected_day}",  fontsize=19, color='white', ha='center',pad=20)
 
-    # Set labels and customize colors
     ax.set_xlabel("Time",  fontsize=15, color='white', labelpad=20)
     ax.set_ylabel("Temperature (°C)",  fontsize=15, color='white', labelpad=20)
     ax.tick_params(axis='y', labelcolor='white', colors='white')
     ax.tick_params(axis='x', labelcolor='white')
 
-    # Add gridlines for better readability
     ax.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.5, color='white')
 
-    # Format time axis (X-axis)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
     plt.xticks(rotation=45)
 
-    # Add annotations for each data point with better positioning and styling
     for i, (time, temp) in enumerate(zip(times, temps)):
         ax.annotate(
             f"{temp}°C", 
             (times[i], temps[i]), 
             textcoords="offset points", 
-            xytext=(0, 15),  # Increase the vertical offset to avoid overlap
+            xytext=(0, 15), 
             ha='center', 
-            fontsize=10,  # Set a smaller font size for clarity
-            color='tab:cyan',  # Set the annotation color to match the graph
-            fontweight='bold',  # Make the annotation text bold for better visibility
-            bbox=dict(facecolor='black', edgecolor='none', boxstyle='round,pad=0.3')  # Add a contrasting background box
+            fontsize=10,
+            color='tab:cyan', 
+            fontweight='bold', 
+            bbox=dict(facecolor='black', edgecolor='none', boxstyle='round,pad=0.3')
         )
 
-    # Adjust the y-axis limits by adding 3 degrees to both ends
     min_temp = min(temps)
     max_temp = max(temps)
     buffer = 3
     ax.set_ylim(min_temp - buffer, max_temp + buffer)
-
-    # Set the background color of the axes to dark
     ax.set_facecolor('#2e2e2e')
-
-    # Improve layout
     plt.tight_layout()
-
-    # Show the graph
     st.pyplot(fig)
 
-# Streamlit App
 def main():
     st.title("Weather Dashboard")
     st.write("🌤️ Get real-time weather updates and forecasts!")
 
-    # Load city data
-    city_data = load_city_data('city.list.json')  # Ensure 'city.list.json' is in the same directory
+    city_data = load_city_data('city.list.json') 
     city_names = [f"{city['name']}, {city['country']}" for city in city_data]
 
-    # Initially, show a blank selectbox
     selected_city = st.selectbox("Search for a city", [""] + city_names)
 
-    # If a city is selected and the button is clicked
     if selected_city and selected_city != "":
-        city_name = selected_city.split(",")[0]  # Get city name without country
+        city_name = selected_city.split(",")[0] 
 
-        # Fetch Data
         with st.spinner("Fetching weather data..."):
             current_weather = get_weather(city_name)
             forecast_data = get_forecast(city_name)
         
         if current_weather.get("cod") == 200:
-            # Extract current weather data
             temperature = current_weather['main']['temp']
             temp_min = current_weather['main']['temp_min']
             temp_max = current_weather['main']['temp_max']
@@ -122,7 +97,6 @@ def main():
             icon_code = current_weather['weather'][0]['icon']
             icon_url = f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
 
-            # Display current weather in a styled card with larger font size
             st.markdown(f"""
             <div style="border:1px solid #333; border-radius:10px; padding:20px; background-color:#222; width:100%; max-width: 600px; margin:auto;">
                 <h2 style="text-align:center; color:white; font-size:24px;">Current Weather in {city_name}</h2>
