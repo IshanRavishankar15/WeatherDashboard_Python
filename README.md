@@ -6,9 +6,8 @@ conditions and a forecast for the upcoming days, helping users make informed dec
 
 
 ## Screenshots
-
-
-
+![image](https://github.com/user-attachments/assets/12d1dac5-7346-4855-bf2b-6934d96189ba)
+![image](https://github.com/user-attachments/assets/613e40ae-aa25-4273-a54f-608ea3db59bf)
 
 
 ## Features
