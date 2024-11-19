@@ -46,11 +46,11 @@ def plot_temperature_graph(times, temps, selected_day):
     ax.plot(times, temps, marker='o', linestyle='-', color='tab:cyan', label=f"Temperature on {selected_day}")
 
     # Add a title to the graph
-    ax.set_title(f"Temperature vs Time for {selected_day}", fontsize=14, color='white', ha='center')
+    ax.set_title(f"Date : {selected_day}", fontname = 'Helvetica', fontsize=19, color='white', ha='center',pad=20)
 
     # Set labels and customize colors
-    ax.set_xlabel("Time", fontsize=12, color='white', labelpad=20)
-    ax.set_ylabel("Temperature (°C)", fontsize=12, color='white', labelpad=20)
+    ax.set_xlabel("Time", fontname = 'Helvetica', fontsize=15, color='white', labelpad=20)
+    ax.set_ylabel("Temperature (°C)", fontname = 'Helvetica', fontsize=15, color='white', labelpad=20)
     ax.tick_params(axis='y', labelcolor='white', colors='white')
     ax.tick_params(axis='x', labelcolor='white')
 
@@ -139,7 +139,8 @@ def main():
 
             # Process and Display Forecast Data
             if forecast_data.get("cod") == "200":
-                st.subheader("Temperature vs Time")
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.subheader("Forecast")
 
                 # Extract forecast information for the graph
                 forecast_times = [item['dt_txt'] for item in forecast_data['list']]
@@ -163,7 +164,7 @@ def main():
                     plot_temperature_graph(selected_times, selected_temps, selected_day)
 
                 # Buttons to select upcoming days above the graph
-                st.subheader("Select a Day to See Forecast")
+                st.subheader("Select a Day to View the Forecast")
                 cols = st.columns(6)  # 6 columns for Today + 5 upcoming days
 
                 # Button for Today
