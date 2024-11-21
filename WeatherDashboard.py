@@ -32,7 +32,7 @@ def get_forecast(city_name):
     return response.json()
 
 def plot_temperature_graph(times, temps, selected_day):
-    fig, ax = plt.subplots(figsize=(10, 6), facecolor='#2e2e2e')  # Set dark background for the graph
+    fig, ax = plt.subplots(figsize=(10, 6), facecolor='#2e2e2e') 
 
     times = [datetime.strptime(time, '%Y-%m-%d %H:%M:%S') for time in times]
 
@@ -107,41 +107,33 @@ def main():
                 <p style="text-align:center; color:white; font-size:20px;">{description}</p>
                 <p style="text-align:center; color:white; font-size:20px;">🌡️ <strong>Min Temp:</strong> {temp_min}°C | <strong>Max Temp:</strong> {temp_max}°C</p>
                 <p style="text-align:center; color:white; font-size:20px;">💧 <strong>Humidity:</strong> {humidity}%</p>
-                <p style="text-align:center; color:white; font-size:20px;">🌬️ <strong>Wind Speed:</strong> {wind_speed} m/s</p>
+                <p style="text-align:center; color:white; font-size:20px;">💨 <strong>Wind Speed:</strong> {wind_speed} m/s</p>
             </div>
             """, unsafe_allow_html=True)
 
-            # Process and Display Forecast Data
             if forecast_data.get("cod") == "200":
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.subheader("Forecast")
 
-                # Extract forecast information for the graph
                 forecast_times = [item['dt_txt'] for item in forecast_data['list']]
                 forecast_dates = [item['dt_txt'][:10] for item in forecast_data['list']]
                 forecast_temps = [item['main']['temp'] for item in forecast_data['list']]
                 
-                # Get the current day and upcoming days
                 current_day = datetime.now().strftime('%Y-%m-%d')
                 upcoming_days = sorted(set(forecast_dates) - {current_day})
 
-                # Create an empty container to update the graph
                 graph_placeholder = st.empty()
 
-                # Display the default graph for the current day
                 selected_day = current_day
                 selected_times = [forecast_times[i] for i in range(len(forecast_dates)) if forecast_dates[i] == selected_day]
                 selected_temps = [forecast_temps[i] for i in range(len(forecast_dates)) if forecast_dates[i] == selected_day]
                 
-                # Initially plot the current day graph
                 with graph_placeholder:
                     plot_temperature_graph(selected_times, selected_temps, selected_day)
 
-                # Buttons to select upcoming days above the graph
                 st.subheader("Select a Day to View the Forecast")
                 cols = st.columns(6)  # 6 columns for Today + 5 upcoming days
 
-                # Button for Today
                 with cols[0]:
                     if st.button('Today'):
                         selected_day = current_day
@@ -150,7 +142,6 @@ def main():
                         with graph_placeholder:
                             plot_temperature_graph(selected_times, selected_temps, selected_day)
 
-                # Buttons for the next 5 days
                 for i, day in enumerate(upcoming_days[:6]):
                     with cols[i+1]:
                         if st.button(day):
